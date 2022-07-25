@@ -4,7 +4,7 @@
 echo "Check Myfolder and create it if it's not exist"
 sleep 2
 Path=`pwd`
-ls -a | grep Myfolder > /dev/null 2>&1
+ ls -a Myfolder/ | grep file1 > /dev/null 2>&1
 if [ $? -eq 0 ]; then
 	echo "The directory "Myfolder" is already exist"
 else
