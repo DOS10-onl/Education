@@ -11,12 +11,12 @@
 ### [ ] script should be added in crontab                                                                            #              
 ### [ ] Please replace path to some files                                                                            #
 ######################################################################################################################
-
+# BEFORE YOU TRYING TO RUN THE SCRIPT, PLEASE CHANGE THE ALL PATH TO YOURS WHERE COMMENT NEED THAT !!!!
 # Updating and installing soft we need
 echo "Checking and updating soft"
 sleep 1
 sudo apt install tree zip -y 
-if [ $? -eq 0 ] ; then
+if sudo apt install tree zip -y >/dev/null ; then
      echo "" > /dev/null
 else
      echo "Something go wrong. Please check the errors and try again"
@@ -45,7 +45,9 @@ case $MODE in
         ;;
 esac
 # Checking the user or process who run this script
+# shellcheck disable=SC2009
 CRON=$(ps -ef | grep "/usr/sbin/CRON -f" | awk '{print $2}' | head -1)  # checking the PID of CRONjob
+# shellcheck disable=SC2009
 SCRIPT=$(ps -ef | grep "$0 $1" | awk '{print $3}' | head -1)            # checking the PPID the our running script
 if [ "$CRON" -eq "$SCRIPT" ]; then 
       LAUNCHER="start from CRON"
@@ -53,26 +55,26 @@ else
       LAUNCHER="start from user"
 fi
 # Create file meta.txt and write some info to it
-touch /home/kali/Pictures/meta.txt      # Please replace with yours path to the meta.txt 
+touch /home/kali/Pictures/meta.txt      # PLEASE CHANGE THE PATH TO YOURS 
 {
 whoami 
 date 
 echo "Mode: $MODE" 
 echo "Launcher: $LAUNCHER"
 echo "List of files:"
-tree /home/kali/Pictures                # Please replace with yours path to the dir which you want list
-} > /home/kali/Pictures/meta.txt        # Similar like above
+tree /home/kali/Pictures                # PLEASE CHANGE THE PATH TO YOURS 
+} > /home/kali/Pictures/meta.txt        # PLEASE CHANGE THE PATH TO YOURS
 # archivation 
 echo "Adding files to zip archive"
 sleep 1
-zip "$PATH_FOLDER/$archive_name".zip -r "/home/kali/Pictures/meta.txt" "/home/kali/Pictures"  # Please replace with yours path to the files which you want to archive 
+zip "$PATH_FOLDER/$archive_name".zip -r "/home/kali/Pictures/meta.txt" "/home/kali/Pictures"  # PLEASE CHANGE THE PATH TO YOURS FILES WHICH YOU WANT ARCHIVE 
 # Checking active crontab and if there is not job, add to CRON
 if crontab -l | grep "$0" ; then  
     echo "Crontab have job. The cron job see above" 
 else    
     sleep 1
     echo "Add job to crontab"
-    echo "$cron_schedule /home/kali/Pictures/archivation.sh $1 $2" | crontab   # adding job to CRON. Please replace with yours path to the script
+    echo "$cron_schedule /home/kali/Pictures/archivation.sh $1 $2" | crontab   # adding job to CRON. PLEASE CHANGE THE PATH TO YOURS PATH TO THE SCRIPT
 fi
 # Copying to remote server
-scp "$PATH_FOLDER/$archive_name".zip vlad@192.168.10.11:/home/vlad/Pictures
+scp "$PATH_FOLDER/$archive_name".zip vlad@192.168.10.11:/home/vlad/Pictures    # PLEASE CHANGE THE PATH TO YOURS
