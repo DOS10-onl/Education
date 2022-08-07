@@ -1,0 +1,42 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+#The configuration of vagrantfile
+Vagrant.configure("2") do |config|
+  # The select box of OS
+  config.vm.box = "Ubuntu_20.04_box"
+  # Disable automatic box update checking
+  config.vm.box_check_update = false
+  # Setting of Virtualbox
+  config.vm.provider "virtualbox" do |vb|
+  vb.name = "Web-server"
+  vb.memory = 2048
+  vb.cpus = 2
+  vb.gui = true
+  end
+  # hostname VM
+  config.vm.hostname = "Web-server"
+  # Disable creation synced_folder
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  # Ignore the vagrantfile in box and use only this vagrantfile
+  config.vm.ignore_box_vagrantfile = true
+  # Installing packing
+  config.vm.provision "shell", path: "17_Update.sh"
+  # Copy html, config files
+  config.vm.provision "file", source: "NGINX/test.html", destination: "/home/vagrant/test.html"
+  config.vm.provision "file", source: "NGINX/test.txt", destination: "/home/vagrant/test.txt" 
+  config.vm.provision "shell", inline: "cp /home/vagrant/test.html /opt/nginx; cp /home/vagrant/test.txt /opt/nginx; rm /home/vagrant/test.html /home/vagrant/test.txt"
+  config.vm.provision "file", source: "NGINX/nginx.conf", destination: "/home/vagrant/nginx.conf" 
+  config.vm.provision "shell", inline: "cp /home/vagrant/nginx.conf /etc/nginx; rm /home/vagrant/nginx.conf"
+  config.vm.provision "file", source: "APACHE2/test.html", destination: "/home/vagrant/test.html"
+  config.vm.provision "file", source: "APACHE2/test.txt", destination: "/home/vagrant/test.txt"
+  config.vm.provision "shell", inline: "cp /home/vagrant/test.html /opt/apache2; cp /home/vagrant/test.txt /opt/apache2; rm /home/vagrant/test.html /home/vagrant/test.txt" 
+  config.vm.provision "file", source: "APACHE2/apache2.conf", destination: "/home/vagrant/apache2.conf"
+  config.vm.provision "file", source: "APACHE2/ports.conf", destination: "/home/vagrant/ports.conf"
+  config.vm.provision "shell", inline: "cp /home/vagrant/apache2.conf /etc/apache2/apache2.conf; cp /home/vagrant/ports.conf /etc/apache2/ports.conf; rm /home/vagrant/apache2.conf /home/vagrant/ports.conf"
+  config.vm.provision "file", source: "APACHE2/000-default.conf", destination: "/home/vagrant/000-default.conf"
+  config.vm.provision "shell", inline: "cp -r /home/vagrant/000-default.conf /etc/apache2/sites-available; rm /home/vagrant/000-default.conf"
+  config.vm.provision "Run services", type: "shell", inline: "echo Run services NGINX and APACHE2; sleep 1; systemctl start nginx; systemctl start apache2; sleep 2"
+  config.vm.provision "Checkin usability NGINX and APACHE2", type: "shell", inline: "echo 'Do curl to the localhost:8084/test.html'; echo ''; curl localhost:8084/test.html; echo ''; sleep 2; echo 'Do curl to the localhost:8085/test.txt'; echo ''; curl localhost:8085/test.txt"
+  end
+
