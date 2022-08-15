@@ -1,0 +1,33 @@
+---
+- name: Installing wget, htop, NGINX
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Install wget, htop, NGINX on Ubuntu
+    apt:
+      name: wget, htop, nginx
+      state: latest
+      update_cache: yes
+    when: ansible_os_family == "Debian"
+
+  - name: Running nginx and enable on Ubuntu
+    service:
+      name: nginx
+      state: started
+      enabled: yes
+    when: ansible_os_family == "Debian"
+
+  - name: Install wget, htop, NGINX on Centos
+    ansible.builtin.yum:
+      name: wget, htop, nginx
+      state: latest
+      update_cache: yes
+    when: ansible_os_family == "RedHat"
+
+  - name: Running nginx and enable on Centos
+    service:
+      name: nginx
+      state: started
+      enabled: yes
+    when: ansible_os_family == "RedHat"
