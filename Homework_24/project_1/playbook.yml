@@ -1,0 +1,7 @@
+---
+- name: Homework_24
+  hosts: all
+  become: true
+
+  roles:
+    - homework_24
