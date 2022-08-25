@@ -1,0 +1,6 @@
+---
+# vars for wordpress
+data_dir: example_com      # data dir with our site to unzip tar.gz, must be exist
+db_name: wordpress         # copy from db/vars/main.yml
+db_user: wordpress         # copy from db/vars/main.yml
+db_pass: 7777777           # copy from db/vars/main.yml
