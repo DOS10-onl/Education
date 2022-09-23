@@ -1,0 +1,76 @@
+---
+# tasks file for homework_24
+- name: Work with Ubuntu
+  block: #### Work with Ubuntu #######
+    - name: Updating installed package's on Ubuntu 
+      apt:
+        upgrade: dist
+        update_cache: yes
+      notify: reboot host's
+    - name: Creating group "students"
+      group:
+        name: "{{ group_name_1 }}"
+        state: present   
+    - name: Creating user "bob" and set group for him
+      user:
+        name: "{{ user_name_1 }}"               # bob
+        group: "{{ group_name_1 }}"             # students  
+    - name: Creating folder from path_1
+      file: 
+        path: "{{ path_1 }}"                    # /opt/bob
+        state: directory
+        mode: "{{ perm_1 }}"                    # 0770
+        owner: "{{ user_name_1 }}"              # bob
+        group: "{{ group_name_1 }}"             # students
+    - name: Creating folder from path_2
+      file: 
+        path: "{{ path_2 }}"                    # /opt/students
+        state: directory
+        mode: "{{ perm_2 }}"                    # 0770
+        owner: "{{ user_name_2 }}"              # root
+        group: "{{ group_name_2 }}"             # students
+    - name: User "bob" as a root nopass
+      community.general.sudoers:
+        name: user "user_name_1" as a root
+        state: present
+        user: "{{ user_name_1 }}" 
+        commands: ALL  
+  when: ansible_os_family == "Debian"  
+
+- name: Work with CentOS
+  block: ### Work with CentOS #####
+    - name: Updating installed package's on CentOS
+      yum:
+        name: "*"
+        state: latest
+        update_cache: yes
+      notify: reboot host's
+    - name: Creating group "students"
+      group:
+        name: "{{ group_name_1 }}"
+        state: present
+    - name: Creating user "bob" and set group for him
+      user:
+        name: "{{ user_name_1 }}"               # bob
+        group: "{{ group_name_1 }}"             # students
+    - name: Creating folder from path_1
+      file: 
+        path: "{{ path_1 }}"                    # /opt/bob
+        state: directory
+        mode: "{{ perm_1 }}"                    # 0770
+        owner: "{{ user_name_1 }}"              # bob
+        group: "{{ group_name_1 }}"             # students
+    - name: Creating folder from path_2
+      file: 
+        path: "{{ path_2 }}"                    # /opt/students
+        state: directory
+        mode: "{{ perm_2 }}"                    # 0770
+        owner: "{{ user_name_2 }}"              # root
+        group: "{{ group_name_2 }}"             # students
+    - name: User "bob" as a root nopass
+      community.general.sudoers:
+        name: user "user_name_1" as a root
+        state: present
+        user: "{{ user_name_1 }}" 
+        commands: ALL   
+  when: ansible_os_family == "RedHat"

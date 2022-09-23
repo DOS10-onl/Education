@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include acme.homework_24"
+      include_role:
+        name: "acme.homework_24"

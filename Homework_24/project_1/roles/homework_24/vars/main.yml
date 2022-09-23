@@ -1,0 +1,10 @@
+---
+# vars file for homework_24
+user_name_1: bob
+group_name_1: students
+user_name_2: root
+group_name_2: students
+path_1: /opt/bob
+path_2: /opt/students
+perm_1: 0770
+perm_2: 0770
