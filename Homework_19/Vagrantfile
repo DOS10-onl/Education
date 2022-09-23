@@ -1,0 +1,37 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+#The configuration of vagrantfile
+Vagrant.configure("2") do |config|
+  # The select box of OS
+  config.vm.box = "Ubuntu_20.04_box"
+  # Disable automatic box update checking
+  config.vm.box_check_update = false
+  # Setting of Virtualbox
+  config.vm.provider "virtualbox" do |vb|
+  vb.name = "Nginx"
+  vb.memory = 2048
+  vb.cpus = 2
+  vb.gui = true
+  end
+  # hostname VM
+  config.vm.hostname = "Nginx"
+  # Disable creation synced_folder
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  # Ignore the vagrantfile in box and use only this vagrantfile
+  config.vm.ignore_box_vagrantfile = true
+  # Installing packing
+  config.vm.provision "shell", path: "18_Update.sh"
+  config.vm.provision "shell", path: "18_TLS.sh"
+  # Copy html, config files
+  config.vm.provision "file", source: "NGINX/index.html", destination: "/home/vagrant/index.html" 
+  config.vm.provision "shell", inline: "cp /home/vagrant/index.html /opt/nginx/index.html; rm /home/vagrant/index.html"
+  config.vm.provision "file", source: "NGINX/nginx.conf", destination: "/home/vagrant/nginx.conf" 
+  config.vm.provision "shell", inline: "cp /home/vagrant/nginx.conf /etc/nginx/nginx.conf; rm /home/vagrant/nginx.conf"
+  config.vm.provision "file", source: "NGINX/hosts", destination: "/home/vagrant/hosts"
+  config.vm.provision "file", source: "NGINX/example.conf", destination: "/home/vagrant/example.conf"
+  config.vm.provision "shell", inline: "cp /home/vagrant/example.conf /etc/nginx/sites-available/example.conf; rm /home/vagrant/example.conf"
+  config.vm.provision "shell", inline: "cp /home/vagrant/hosts /etc/hosts; rm /home/vagrant/hosts"
+  config.vm.provision "Run services", type: "shell", inline: "echo Run NGINX; sleep 1; ln -s /etc/nginx/sites-available/example.conf /etc/nginx/sites-enabled/; systemctl start nginx"
+  end
+
