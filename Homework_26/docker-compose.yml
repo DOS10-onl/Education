@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  testing_1:
+    build: ./Docker_1
+    ports:
+      - "8085:8085"
+  testing_2:
+    build: ./Docker_2
+    ports:
+      - "8086:8085"
+  testing_3:
+    build: ./Docker_3
+    ports:
+      - "8087:8085"
