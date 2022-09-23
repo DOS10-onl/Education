@@ -1,0 +1,10 @@
+---
+- name: Homework_24
+  hosts: all
+  become: true
+
+  roles:
+    - php
+    - nginx1
+    - db
+    - wordpress
